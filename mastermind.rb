@@ -23,4 +23,18 @@ class Mastermind
     end
     return code
   end
+
+  def input_guess
+    print "Input a guess (available colors: R, O, Y, G, B, P): "
+    guess = gets
+
+    begin
+      guess.upcase
+    rescue
+      raise "Please enter only letters."
+    end
+  end
+
+  # def compare(code, guess)
+  #   code = code.join()
 end
