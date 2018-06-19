@@ -33,7 +33,7 @@ class Code
 end
 
 class Input
-  attr_reader :user_input
+  attr_reader :user_input, :valid_guess
 
   def initialize
     @valid_guess = false
