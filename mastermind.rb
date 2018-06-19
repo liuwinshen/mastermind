@@ -1,6 +1,6 @@
 class Mastermind
   def print_instructions
-    puts "Welcome to Mastermind! The object of the game is to guess a 4-color code "\
+    print "Welcome to Mastermind! The object of the game is to guess a 4-color code "\
         "within 10 guesses. The available colors are red, orange, yellow, green, "\
         "blue, and purple. Colors may be used in the code more than once or not at all."\
 
@@ -35,29 +35,41 @@ end
 class Input
   attr_reader :user_input
 
-  def input_guess
-    print "Input a guess (available colors: R, O, Y, G, B, P): "
-    @user_input = gets
+  def initialize
+    @valid_guess = false
+    @user_input = ""
   end
 
-  def validate_guess(guess = @user_input)
-    invalid_guess = true
-    while invalid_guess
-      begin
-        guess = guess.upcase.gsub(/[,/s]/, "")
-      rescue NoMethodError
-        puts "Please enter only available colors: R, O, Y, G, B, P."
-        input_guess
-      end
+  def input_guess
+    until @valid_guess
+      print "Input a guess (available colors: R, O, Y, G, B, P): "
+      @user_input = gets.chomp
+      validator(@user_input)
+    end
+    return @user_input.upcase.gsub(/[\W]/, "")
+  end
 
-      if guess == /[ROYGBP][ROYGBP][ROYGBP][ROYGBP]/
-        invalid_guess = false
-      else
-        puts "Please enter only available colors: R, O, Y, G, B, P."
-        input_guess
-      end
+  def clean_guess(guess)
+    begin
+      guess = guess.upcase.gsub(/[\W]/, "")
+    rescue NoMethodError, TypeError
+      puts "Please enter only letters."
     end
     return guess
   end
 
+  def validate_length(guess)
+    if guess.length != 4
+      puts "Please enter only four colors."
+    end
+  end
+
+  def validate_colors(guess)
+    if /[ROYGBP][ROYGBP][ROYGBP][ROYGBP]/.match(guess)
+      @valid_guess = true
+    else
+      puts "Please enter only available colors: R, O, Y, G, B, P."
+    end
+  return guess
+  end
 end

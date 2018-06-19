@@ -17,13 +17,24 @@ RSpec.describe Mastermind do
       expect(["R", "O", "Y", "G", "B", "P"].include?(char)).to eq(true)
     end
   end
+end
 
-  it "takes in user input" do
-    expect(Input.new.input_guess).not_to eq (nil)
+RSpec.describe Input do
+  it "only accepts letters from input" do
+    input = Input.new
+    expect(input.clean_guess("abcd")).to eq("ABCD")
+    # expect{input.clean_guess("1234")}.to output(/Please enter only letters./).to_stdout
   end
 
-  it "only allows letters in input" do
-    expect{Input.new.validate_guess(guess = 123)}.to output(/Please enter only available colors/).to_stdout
-    expect{Input.new.validate_guess(guess = "abc")}.to eq("ABC")
+  it "only accepts the exact number of allowable elements" do
+    input = Input.new
+    expect{input.validate_length("ROYRR")}.to output(/Please enter only four colors/).to_stdout
+    expect(input.valid_guess).to eq(false)
+  end
+
+  it "only accepts available colors in input" do
+    input = Input.new
+    expect(input.validate_colors("ROYG")).to eq("ROYG")
+    expect{input.validate_colors("ABCD")}.to output(/Please enter only available/).to_stdout
   end
 end
