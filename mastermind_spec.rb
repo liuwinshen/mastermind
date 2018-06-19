@@ -23,7 +23,7 @@ RSpec.describe Input do
   it "only accepts letters from input" do
     input = Input.new
     expect(input.clean_guess("abcd")).to eq("ABCD")
-    # expect{input.clean_guess("1234")}.to output(/Please enter only letters./).to_stdout
+    #expect{input.clean_guess("1234")}.to output(/Please enter only letters./).to_stdout
   end
 
   it "only accepts the exact number of allowable elements" do
@@ -35,6 +35,7 @@ RSpec.describe Input do
   it "only accepts available colors in input" do
     input = Input.new
     expect(input.validate_colors("ROYG")).to eq("ROYG")
-    expect{input.validate_colors("ABCD")}.to output(/Please enter only available/).to_stdout
+    expect{input.validate_colors("RABC")}.to output(/Please enter only available colors/).to_stdout
+    expect{input.validate_colors("ABCD")}.to output(/Please enter only available colors/).to_stdout
   end
 end
