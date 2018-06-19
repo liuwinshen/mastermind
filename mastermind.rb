@@ -42,11 +42,12 @@ class Input
 
   def input_guess
     until @valid_guess
-      print "Input a guess (available colors: R, O, Y, G, B, P): "
-      @user_input = gets.chomp
-      validator(@user_input)
+      print "Make a guess using available colors (R, O, Y, G, B, P): "
+      @user_input = clean_guess(gets.chomp)
+      validate_length(@user_input)
+      validate_colors(@user_input)
     end
-    return @user_input.upcase.gsub(/[\W]/, "")
+    return @user_input
   end
 
   def clean_guess(guess)
@@ -69,6 +70,7 @@ class Input
       @valid_guess = true
     else
       puts "Please enter only available colors: R, O, Y, G, B, P."
+      @valid_guess = false
     end
   return guess
   end
