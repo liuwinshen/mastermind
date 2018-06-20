@@ -26,7 +26,7 @@ RSpec.describe Input do
 
   it "validates letters" do
     expect(input.clean_guess("abcd")).to eq("ABCD")
-    #expect{input.clean_guess("1234")}.to output(/Please enter only letters./).to_stdout
+    expect{input.clean_guess(1234)}.to output(/Please enter only letters./).to_stdout
   end
 
   it "validates the exact number of allowable elements" do
@@ -34,15 +34,20 @@ RSpec.describe Input do
     expect(input.valid_guess).to eq(false)
   end
 
-  it "validates available colors" do
+  it "accepts available colors" do
+    input = Input.new
     expect(input.validate_colors("ROYG")).to eq("ROYG")
     expect(input.valid_guess).to eq(true)
+    expect(input.validate_colors("RRRR")).to eq("RRRR")
+    expect(input.valid_guess).to eq(true)
+  end
+
+  it "rejects any non-available colors" do
+    input = Input.new
     expect{input.validate_colors("ROBC")}.to output(/Please enter only available colors/).to_stdout
     expect(input.valid_guess).to eq(false)
     expect{input.validate_colors("ABCD")}.to output(/Please enter only available colors/).to_stdout
     expect(input.valid_guess).to eq(false)
-    expect(input.validate_colors("RRRR")).to eq("RRRR")
-    expect(input.valid_guess).to eq(true)
   end
 
   # it "only accepts validated input" do

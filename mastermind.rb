@@ -47,7 +47,7 @@ class Input
       validate_length(@user_input)
       validate_colors(@user_input)
     end
-    return @user_input
+    @user_input
   end
 
   def clean_guess(guess)
@@ -56,7 +56,6 @@ class Input
     rescue NoMethodError, TypeError
       puts "Please enter only letters."
     end
-    return guess
   end
 
   def validate_length(guess)
@@ -66,12 +65,11 @@ class Input
   end
 
   def validate_colors(guess)
-    if /[ROYGBP][ROYGBP][ROYGBP][ROYGBP]/.match(guess)
+    if /[ROYGBP]{4}/.match(guess)
       @valid_guess = true
     else
       puts "Please enter only available colors: R, O, Y, G, B, P."
-      @valid_guess = false
     end
-  return guess
+    guess
   end
 end
