@@ -1,13 +1,19 @@
 require_relative './mastermind'
 
 RSpec.describe Mastermind do
+  game = Mastermind.new
   it "prints game instructions" do
-    game = Mastermind.new
-    expect {game.print_instructions}.to output(/Welcome to Mastermind!/).to_stdout
+    expect {game.print_instructions}.to output(/After each guess/).to_stdout
+  end
+
+  it "counts the number of each color in a given code" do
+    expect(game.color_count(["R", "O", "Y", "G"])).to eq ({:R => 1, :O => 1, :Y => 1, :G => 1})
+    expect(game.color_count(["P", "P", "P", "P"])).to eq ({:P => 4})
+    expect(game.color_count(["R", "O", "B", "R", "B", "B"])).to eq ({:R => 2, :O => 1, :B => 3})
   end
 
   # it "counts how many colors in the guess match the code" do
-  #   expect(game.compare("ROYG", "RROO")).to eq (2)
+  #   expect(game.compare(["R", "O", "Y", "G"], "RROO")).to eq (2)
   # end
 end
 
@@ -24,12 +30,6 @@ RSpec.describe SecretCode do
       expect(["R", "O", "Y", "G", "B", "P"].include?(char)).to eq(true)
     end
   end
-
-  it "counts the number of each color in the secret code" do
-    expect(secret_code.color_count(["R", "O", "Y", "G"])).to eq ({:R => 1, :O => 1, :Y => 1, :G => 1})
-    expect(secret_code.color_count(["P", "P", "P", "P"])).to eq ({:P => 4})
-    expect(secret_code.color_count(["R", "O", "B", "R", "B", "B"])).to eq ({:R => 2, :O => 1, :B => 3})
-  end
 end
 
 RSpec.describe Input do
@@ -38,11 +38,10 @@ RSpec.describe Input do
   it "validates letters" do
     expect(input.clean_guess("abcd")).to eq("ABCD")
     expect{input.clean_guess(1234)}.to output(/Please enter only letters./).to_stdout
-    expect{input.clean_guess("abc!")}.to output(/Please enter only four colors./).to_stdout
   end
 
   it "validates the exact number of allowable elements" do
-    expect{input.validate_length("ROYRR")}.to output(/Please enter only four colors/).to_stdout
+    expect{input.validate_length("ROYRR")}.to output(/Please enter four colors/).to_stdout
     expect(input.valid_guess).to eq(false)
   end
 

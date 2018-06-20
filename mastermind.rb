@@ -2,39 +2,19 @@ class Mastermind
   attr_reader :red_count, :white_count
 
   def print_instructions
-    print "Welcome to Mastermind! The object of the game is to guess a 4-color code "\
-        "within 10 guesses. The available colors are red, orange, yellow, green, "\
-        "blue, and purple. Colors may be used in the code more than once or not at all."\
+    puts "\tWelcome to Mastermind! The object of the game is to guess a 4-color code
+        within 10 guesses. The available colors are red, orange, yellow, green,
+        blue, and purple. Colors may be used in the code more than once or not at all.
 
-        "\nTo make a guess: type the first letter of each color you're guessing in caps. "\
-        "For example, if you want to guess 'red, orange, yellow, red,' type 'ROYR'."\
+        To make a guess: type the first letter of each color you're guessing in caps.
+        For example, if you want to guess 'red, orange, yellow, red,' type 'ROYR'.
 
-        "\nAfter each guess, you will receive feedback in the form of colored pins, letting you know:"\
-          "\n\t- how many colors are correct but in the wrong position (red pins)"\
-          "\n\t- how many colors are correct and in the right position (white pins)"\
+        After each guess, you will receive feedback in the form of colored pins,
+        letting you know:
+          \t- how many colors are correct but in the wrong position (red pins)
+          \t- how many colors are correct and in the right position (white pins)
 
-        "\nTo quit the game, type '/q'. To start a new game, type '/r'."
-    end
-
-  # def compare(code, guess)
-  #   @red_count = 0
-  #   guess.each do |color|
-  #     if color
-  #   end
-  # end
-end
-
-class SecretCode
-  attr_reader :code, :color_count
-
-  def generate_code
-    @code = []
-    colors = ["R", "O", "Y", "G", "B", "P"]
-    while code.length < 4 do
-      random_index = Random.rand(0..5)
-      @code << colors[random_index]
-    end
-    @code
+        To quit the game, type '/q'. To start a new game, type '/r'."
   end
 
   def color_count(code)
@@ -48,6 +28,32 @@ class SecretCode
       end
     end
     @color_count
+  end
+
+  def get_color_counts(code, guess)
+    code_count = color_count(code)
+    guess = guess.chars
+    guess_count = color_count(guess)
+  end
+
+  def compare_red_pins(code_color_count, guess_color_count)
+    @red_count = 0
+    guess_count.each do |key, value|
+    end
+  end
+end
+
+class SecretCode
+  attr_reader :code, :color_count
+
+  def generate_code
+    @code = []
+    colors = ["R", "O", "Y", "G", "B", "P"]
+    while code.length < 4 do
+      random_index = Random.rand(0..5)
+      @code << colors[random_index]
+    end
+    @code
   end
 end
 
@@ -63,8 +69,9 @@ class Input
     until @valid_guess
       print "Make a guess using available colors (R, O, Y, G, B, P): "
       @user_input = clean_guess(gets.chomp)
-      validate_length(@user_input)
-      validate_colors(@user_input)
+      if validate_length(@user_input)
+        validate_colors(@user_input)
+      end
     end
     @user_input
   end
@@ -72,9 +79,6 @@ class Input
   def clean_guess(guess)
     begin
       guess = guess.upcase.gsub(/[\W]/, "")
-      if guess.length != 4
-        puts "Please enter only four colors."
-      end
     rescue NoMethodError, TypeError
       puts "Please enter only letters."
     end
@@ -83,7 +87,10 @@ class Input
 
   def validate_length(guess)
     if guess.length != 4
-      puts "Please enter only four colors."
+      valid_length = false
+      puts "Please enter four colors using only their first letters."
+    else
+      valid_length = true
     end
   end
 
@@ -91,8 +98,26 @@ class Input
     if /[ROYGBP]{4}/.match(guess)
       @valid_guess = true
     else
-      puts "Please enter only available colors: R, O, Y, G, B, P."
+      puts "Please enter only available colors."
     end
     guess
   end
+end
+
+def main
+  game = Mastermind.new
+  game.print_instructions
+  secret_code = SecretCode.new.generate_code
+  input = Input.new
+  user_guess = input.input_guess
+
+  puts "\tFor the purposes of this PR, I'm going to tell you the secret code:
+        #{secret_code.join}.
+
+        The number of times each color appears in the code is #{game.color_count(secret_code)}.
+        The number of times each color appears in your guess is #{game.color_count(user_guess.chars)}."
+end
+
+if __FILE__ == $0
+  main
 end
