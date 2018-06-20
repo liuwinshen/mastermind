@@ -5,19 +5,30 @@ RSpec.describe Mastermind do
     game = Mastermind.new
     expect {game.print_instructions}.to output(/Welcome to Mastermind!/).to_stdout
   end
+
+  # it "counts how many colors in the guess match the code" do
+  #   expect(game.compare("ROYG", "RROO")).to eq (2)
+  # end
 end
 
-RSpec.describe Code do
-  code = Code.new.generate_code
+RSpec.describe SecretCode do
+  secret_code = SecretCode.new
+  generated_code = secret_code.generate_code
 
   it "generates a random code of length 4" do
-    expect(code.length).to eq (4)
+    expect(generated_code.length).to eq (4)
   end
 
   it "generates a code using at least one of the possible colors" do
-    code.each do |char|
+    generated_code.each do |char|
       expect(["R", "O", "Y", "G", "B", "P"].include?(char)).to eq(true)
     end
+  end
+
+  it "counts the number of each color in the secret code" do
+    expect(secret_code.color_count(["R", "O", "Y", "G"])).to eq ({:R => 1, :O => 1, :Y => 1, :G => 1})
+    expect(secret_code.color_count(["P", "P", "P", "P"])).to eq ({:P => 4})
+    expect(secret_code.color_count(["R", "O", "B", "R", "B", "B"])).to eq ({:R => 2, :O => 1, :B => 3})
   end
 end
 
@@ -27,6 +38,7 @@ RSpec.describe Input do
   it "validates letters" do
     expect(input.clean_guess("abcd")).to eq("ABCD")
     expect{input.clean_guess(1234)}.to output(/Please enter only letters./).to_stdout
+    expect{input.clean_guess("abc!")}.to output(/Please enter only four colors./).to_stdout
   end
 
   it "validates the exact number of allowable elements" do
@@ -49,9 +61,4 @@ RSpec.describe Input do
     expect{input.validate_colors("ABCD")}.to output(/Please enter only available colors/).to_stdout
     expect(input.valid_guess).to eq(false)
   end
-
-  # it "only accepts validated input" do
-  #   test_input = Input.new.input_guess
-  #   expect(test_input).to eq(test_input.user_input)
-  # end
 end

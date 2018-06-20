@@ -1,4 +1,6 @@
 class Mastermind
+  attr_reader :red_count, :white_count
+
   def print_instructions
     print "Welcome to Mastermind! The object of the game is to guess a 4-color code "\
         "within 10 guesses. The available colors are red, orange, yellow, green, "\
@@ -8,18 +10,22 @@ class Mastermind
         "For example, if you want to guess 'red, orange, yellow, red,' type 'ROYR'."\
 
         "\nAfter each guess, you will receive feedback in the form of colored pins, letting you know:"\
-          "\n\t- how many colors are correct but in the wrong position (white pins)"\
-          "\n\t- how many colors are correct and in the right position (red pins)"\
+          "\n\t- how many colors are correct but in the wrong position (red pins)"\
+          "\n\t- how many colors are correct and in the right position (white pins)"\
 
         "\nTo quit the game, type '/q'. To start a new game, type '/r'."
     end
 
-  def compare(code, guess)
-  end
+  # def compare(code, guess)
+  #   @red_count = 0
+  #   guess.each do |color|
+  #     if color
+  #   end
+  # end
 end
 
-class Code
-  attr_reader :code
+class SecretCode
+  attr_reader :code, :color_count
 
   def generate_code
     @code = []
@@ -28,7 +34,20 @@ class Code
       random_index = Random.rand(0..5)
       @code << colors[random_index]
     end
-    return @code
+    @code
+  end
+
+  def color_count(code)
+    @color_count = Hash.new(0)
+    code.each do |color|
+      color_key = color.to_sym
+      if @color_count.key?(color_key)
+        @color_count[color_key] += 1
+      else
+        @color_count[color_key] = 1
+      end
+    end
+    @color_count
   end
 end
 
@@ -53,9 +72,13 @@ class Input
   def clean_guess(guess)
     begin
       guess = guess.upcase.gsub(/[\W]/, "")
+      if guess.length != 4
+        puts "Please enter only four colors."
+      end
     rescue NoMethodError, TypeError
       puts "Please enter only letters."
     end
+    guess
   end
 
   def validate_length(guess)
