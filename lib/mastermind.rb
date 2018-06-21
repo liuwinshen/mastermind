@@ -3,11 +3,11 @@ class Mastermind
 
   def print_instructions
     puts "\tWelcome to Mastermind! The object of the game is to guess a 4-color code
-        within 10 guesses. The available colors are red, orange, yellow, green,
+        (order matters) within 10 guesses. The available colors are red, orange, yellow, green,
         blue, and purple. Colors may be used in the code more than once or not at all.
 
         To make a guess: type the first letter of each color you're guessing in caps.
-        For example, if you want to guess 'red, orange, yellow, red,' type 'ROYR'.
+        For example, if you want to guess 'red, orange, yellow, red,' enter 'ROYR'.
 
         After each guess, you will receive feedback in the form of colored pins,
         letting you know:
@@ -19,6 +19,10 @@ class Mastermind
 
   def color_count(code)
     color_count = Hash.new(0)
+    if !(code.kind_of?(Array))
+      code = code.chars
+    end
+
     code.each do |color|
       color_key = color.to_sym
       color_count[color_key] += 1
@@ -26,15 +30,20 @@ class Mastermind
     color_count
   end
 
-  def get_color_counts(code, guess)
-    code_count = color_count(code)
-    guess = guess.chars
-    guess_count = color_count(guess)
+  def white_pins(code_color_count, guess_color_count)
+    @white_count = 0
+    guess_color_count.each do |key, value|
+      if value <= code_color_count[key]
+        @white_count += value
+      elsif value > code_color_count[key]
+        @white_count += code_color_count[key]
+      end
+    end
+    @white_count
   end
 
-  # def compare_red_pins(code_color_count, guess_color_count)
-  #   @red_count = 0
-  #   guess_count.each do |key, value|
-  #   end
-  # end
+  def red_pins(white_pins, code_color_count, guess_color_count)
+    @red_count = 0
+    
+  end
 end

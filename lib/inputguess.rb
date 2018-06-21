@@ -1,22 +1,21 @@
 class InputGuess
-  attr_reader :user_input, :valid_guess
+  attr_reader :valid_guess
 
   def initialize
     @valid_guess = false
-    @user_input = ""
   end
 
-  def input_guess
+  def input_guess(colors)
     until @valid_guess
-      print "Make a guess using available colors (R, O, Y, G, B, P): "
-      @user_input = clean_guess(gets.chomp)
-      if validate_length(@user_input)
-        validate_colors(@user_input)
+      print "Make a guess using available colors #{colors}: "
+      user_input = clean_guess(gets.chomp)
+      if validate_length(user_input)
+        validate_colors(user_input)
       else
         puts "Please enter four colors using only their first letters."
       end
     end
-    @user_input
+    user_input
   end
 
   def clean_guess(guess)
@@ -29,9 +28,7 @@ class InputGuess
   end
 
   def validate_length(guess)
-    return true unless guess.length != 4
-    false
-    #end
+    guess.length == 4
   end
 
   def validate_colors(guess)
