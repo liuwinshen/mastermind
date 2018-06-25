@@ -1,11 +1,7 @@
 require_relative '../lib/code'
 
-class MockCode < Code
-  attr_accessor :code
-end
-
 RSpec.describe Code do
-  let(:game_code) { MockCode.new }
+  let(:game_code) { Code.new }
 
   describe "#initialize" do
     it "creates code of length 4" do

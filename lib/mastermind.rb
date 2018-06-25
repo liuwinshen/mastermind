@@ -1,11 +1,4 @@
 class Mastermind
-  attr_reader :guess_count, :past_guesses
-
-  def initialize
-    @guess_count = 0
-    @past_guesses = []
-  end
-
   def print_instructions(long_colors)
     puts "\tWelcome to Mastermind! The object of the game is to guess a 4-color code
         (order matters) within 10 guesses. The available colors are #{long_colors}.
@@ -21,12 +14,4 @@ class Mastermind
 
         To quit the game, type '/q'. To start a new game, type '/r'."
   end
-
-  # def play(short_colors)
-  #   while @guess_count <= 10
-  #     InputGuess.input(short_colors)
-  #
-  #     @guess_count += 1
-  #   end
-  # end
 end
