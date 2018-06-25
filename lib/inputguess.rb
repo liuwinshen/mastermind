@@ -1,13 +1,13 @@
 class InputGuess
-  attr_reader :valid_guess
+  attr_reader :valid_guess, :guess_count
 
   def initialize
     @valid_guess = false
   end
 
-  def input_guess(colors)
+  def input(short_colors)
     until @valid_guess
-      print "Make a guess using available colors #{colors}: "
+      print "Make a guess using available colors #{short_colors}: "
       user_input = clean_guess(gets.chomp)
       if validate_length(user_input)
         validate_colors(user_input)

@@ -25,8 +25,6 @@ RSpec.describe InputGuess do
       end
 
     context "when input is too long or short"
-      # subject = input.validate_length("ROYRR")
-      # it { is_expected.to be (false)}
       it "returns false" do
         expect(input.validate_length("ROYRR")).to eq(false)
         expect(input.validate_length("RO")).to eq(false)

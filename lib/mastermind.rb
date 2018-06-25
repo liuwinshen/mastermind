@@ -1,10 +1,15 @@
 class Mastermind
-  attr_reader :red_count, :white_count
+  attr_reader :guess_count, :past_guesses
 
-  def print_instructions
+  def initialize
+    @guess_count = 0
+    @past_guesses = []
+  end
+
+  def print_instructions(long_colors)
     puts "\tWelcome to Mastermind! The object of the game is to guess a 4-color code
-        (order matters) within 10 guesses. The available colors are red, orange, yellow, green,
-        blue, and purple. Colors may be used in the code more than once or not at all.
+        (order matters) within 10 guesses. The available colors are #{long_colors}.
+        Colors may be used in the code more than once or not at all.
 
         To make a guess: type the first letter of each color you're guessing in caps.
         For example, if you want to guess 'red, orange, yellow, red,' enter 'ROYR'.
@@ -17,33 +22,11 @@ class Mastermind
         To quit the game, type '/q'. To start a new game, type '/r'."
   end
 
-  def color_count(code)
-    color_count = Hash.new(0)
-    if !(code.kind_of?(Array))
-      code = code.chars
-    end
-
-    code.each do |color|
-      color_key = color.to_sym
-      color_count[color_key] += 1
-      end
-    color_count
-  end
-
-  def white_pins(code_color_count, guess_color_count)
-    @white_count = 0
-    guess_color_count.each do |key, value|
-      if value <= code_color_count[key]
-        @white_count += value
-      elsif value > code_color_count[key]
-        @white_count += code_color_count[key]
-      end
-    end
-    @white_count
-  end
-
-  def red_pins(white_pins, code_color_count, guess_color_count)
-    @red_count = 0
-    
-  end
+  # def play(short_colors)
+  #   while @guess_count <= 10
+  #     InputGuess.input(short_colors)
+  #
+  #     @guess_count += 1
+  #   end
+  # end
 end
