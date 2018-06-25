@@ -1,16 +1,17 @@
 class Code
   attr_reader :short_colors, :long_colors, :code
 
-  def initialize(colors = ["R", "O", "Y", "G", "B", "P"])
-    @short_colors = colors
-    @long_colors = ["red", "orange", "yellow", "green", "blue", "purple"]
+  def initialize(short_colors = ["R", "O", "Y", "G", "B", "P"],
+                long_colors = ["red", "orange", "yellow", "green", "blue", "purple"])
+    @short_colors = short_colors
+    @long_colors = long_colors
     @code = Array.new(4).map { |_| @short_colors.sample }.join
   end
 
   def color_count(code)
     color_count = Hash.new(0)
-    code.each_char do |color|
-      color_key = color.to_sym
+    code.each_char do |c|
+      color_key = c.to_sym
       color_count[color_key] += 1
       end
     color_count
@@ -21,11 +22,11 @@ class Code
     guess_color_count = color_count(guess)
 
     white_count = 0
-    guess_color_count.each do |key, value|
-      if value <= code_color_count[key]
-        white_count += value
-      elsif value > code_color_count[key]
-        white_count += code_color_count[key]
+    guess_color_count.each do |k, v|
+      if v <= code_color_count[k]
+        white_count += v
+      elsif v > code_color_count[k]
+        white_count += code_color_count[k]
       end
     end
     white_count
