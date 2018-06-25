@@ -37,7 +37,9 @@ class Code
     guess.each_char do |c|
       if c == code[guess.index(c)]
         red_count += 1
-        white_count -= 1
+        if white_count > 0
+          white_count -= 1
+        end
       end
     end
     puts "Red pins: #{red_count} \nWhite pins: #{white_count}"

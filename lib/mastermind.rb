@@ -28,8 +28,18 @@ class Mastermind
       guess = @game_input.input(short_colors)
       @past_guesses << guess
       puts "Your previous guesses were #{@past_guesses}."
+
+      secret_code = @game_code.code
+      white_count = @game_code.white_pins(secret_code, guess)
+      feedback = @game_code.red_and_white(white_count, secret_code, guess)
+      if feedback[:red] == 4
+        puts "You win! The code was #{secret_code}. Would you like to play again? "
+      end
       @remaining_guesses -= 1
     end
     @remaining_guesses
+    if feedback[:red] != 4
+      puts "Sorry, the code was #{secret_code}. Would you like to play again? "
+    end
   end
 end
