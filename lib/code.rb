@@ -34,13 +34,15 @@ class Code
 
   def red_and_white(white_count, code, guess)
     red_count = 0
-    guess.each_char do |c|
-      if c == code[guess.index(c)]
+    i = 0
+    while i < guess.length do
+      if guess[i] == code[i]
         red_count += 1
         if white_count > 0
           white_count -= 1
         end
       end
+      i += 1
     end
     puts "Red pins: #{red_count} \nWhite pins: #{white_count}"
     {:red => red_count, :white => white_count}

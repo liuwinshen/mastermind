@@ -34,6 +34,7 @@ class Mastermind
       feedback = @game_code.red_and_white(white_count, secret_code, guess)
       if feedback[:red] == 4
         puts "You win! The code was #{secret_code}. Would you like to play again? "
+        break
       end
       @remaining_guesses -= 1
     end
