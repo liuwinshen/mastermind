@@ -1,5 +1,9 @@
 class InputGuess
+<<<<<<< HEAD
   def guess(colors)
+=======
+  def input(colors)
+>>>>>>> 026798d1047df86822799dcee30168515cd9018a
     valid_guess = false
     until valid_guess
       print "Make a guess using available colors #{colors}: "
