@@ -1,13 +1,10 @@
 class InputGuess
-<<<<<<< HEAD
   def guess(colors)
-=======
-  def input(colors)
->>>>>>> 026798d1047df86822799dcee30168515cd9018a
     valid_guess = false
     until valid_guess
       print "Make a guess using available colors #{colors}: "
       user_input = clean_guess(gets.chomp)
+      return user_input if user_input == "QUIT" || user_input == "NEW"
       if validate_length(user_input) && validate_colors(user_input, colors)
         valid_guess = true
       else

@@ -19,13 +19,17 @@ class Mastermind
           \t- how many colors are correct but in the wrong position (white pins)
           \t- how many colors are correct and in the right position (red pins)
 
-        To quit the game, type '/q'. To start a new game, type '/r'."
+        To quit the game, type 'quit'. To start a new game, type '/new'."
   end
 
   def play(short_colors)
     while @remaining_guesses > 0
       puts "You have #{@remaining_guesses} guesses remaining."
-      guess = @game_input.input(short_colors)
+      guess = @game_input.guess(short_colors)
+      if guess == "QUIT"
+        quit
+        exit
+      end
       @past_guesses << guess
       puts "Your previous guesses were #{@past_guesses}."
 
@@ -38,9 +42,14 @@ class Mastermind
       end
       @remaining_guesses -= 1
     end
+
     @remaining_guesses
     if feedback[:red] != 4
       puts "Sorry, the code was #{secret_code}. Would you like to play again? "
     end
+  end
+
+  def quit
+    puts "So long for now!"
   end
 end

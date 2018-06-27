@@ -15,9 +15,9 @@ RSpec.describe Mastermind do
     end
   end
 
-  describe "#play" do
-    xit "returns game outcome" do
-      expect (game.play(short_colors)).to eq (0)
+  describe "#quit" do
+    it "ends game" do
+      expect {game.quit}.to output(/So long for now!/).to_stdout
     end
   end
 end
