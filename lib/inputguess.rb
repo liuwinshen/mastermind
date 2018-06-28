@@ -4,7 +4,7 @@ class InputGuess
     until valid_guess
       print "Make a guess using available colors #{colors}: "
       user_input = clean_guess(gets.chomp)
-      return user_input if user_input == "QUIT" || user_input == "NEW"
+      return user_input if user_input == "QUIT" || user_input == "RESTART"
       if validate_length(user_input) && validate_colors(user_input, colors)
         valid_guess = true
       else

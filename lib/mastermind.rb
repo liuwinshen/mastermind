@@ -19,37 +19,93 @@ class Mastermind
           \t- how many colors are correct but in the wrong position (white pins)
           \t- how many colors are correct and in the right position (red pins)
 
-        To quit the game, type 'quit'. To start a new game, type '/new'."
+        To quit the game, type 'quit'. To start a new game, type 'restart'."
   end
 
-  def play(short_colors)
+  def loop_guesses(short_colors)
     while @remaining_guesses > 0
       puts "You have #{@remaining_guesses} guesses remaining."
       guess = @game_input.guess(short_colors)
-      if guess == "QUIT"
-        quit
-        exit
-      end
-      @past_guesses << guess
-      puts "Your previous guesses were #{@past_guesses}."
+      quit if guess == "QUIT"
+      restart if guess == "RESTART"
 
-      secret_code = @game_code.code
-      white_count = @game_code.white_pins(secret_code, guess)
-      feedback = @game_code.red_and_white(white_count, secret_code, guess)
+      feedback = feedback(guess)
       if feedback[:red] == 4
-        puts "You win! The code was #{secret_code}. Would you like to play again? "
+        win
         break
       end
+      log_guess(guess)
       @remaining_guesses -= 1
     end
+    loss(feedback)
+  end
 
-    @remaining_guesses
-    if feedback[:red] != 4
-      puts "Sorry, the code was #{secret_code}. Would you like to play again? "
+  def log_guess(guess)
+    @past_guesses << guess
+    puts "Your previous guesses were #{@past_guesses}."
+  end
+
+  def color_count(code)
+    color_count = Hash.new(0)
+    code.each_char do |c|
+      color_key = c.to_sym
+      color_count[color_key] += 1
+      end
+    color_count
+  end
+
+  def white_pins(code, guess)
+    code_color_count = color_count(code)
+    guess_color_count = color_count(guess)
+
+    white_count = 0
+    guess_color_count.each do |k, v|
+      if v <= code_color_count[k]
+        white_count += v
+      elsif v > code_color_count[k]
+        white_count += code_color_count[k]
+      end
     end
+    white_count
+  end
+
+  def red_and_white(white_count, code, guess)
+    red_count = 0
+
+    guess.length.times do |i|
+      if guess[i] == code[i]
+        red_count += 1
+        if white_count > 0
+          white_count -= 1
+        end
+      end
+    end
+    puts "Red pins: #{red_count} \nWhite pins: #{white_count}"
+    {:red => red_count, :white => white_count}
+  end
+
+  def win
+    puts "You win! The code was #{@game_code}. Would you like to play again? "
+  end
+
+  def loss(feedback)
+    if feedback[:red] != 4
+      puts "Sorry, the code was #{@game_code}. Would you like to play again? "
+    end
+  end
+
+  def feedback(guess)
+    white_count = white_pins(@game_code, guess)
+    red_and_white(white_count, @game_code, guess)
   end
 
   def quit
     puts "So long for now!"
+    exit
+  end
+
+  def restart
+    puts "New game coming right up!"
+    exit
   end
 end

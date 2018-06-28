@@ -2,11 +2,9 @@ require_relative './mastermind'
 require_relative './code'
 require_relative './inputguess'
 
-code = Code.new
-short_colors = code.short_colors
-long_colors = code.long_colors
+code = CodeGenerator.new
 input = InputGuess.new
-game = Mastermind.new(code, input)
+game = Mastermind.new(code.secret_code, input)
 
-game.print_instructions(long_colors)
-game.play(short_colors)
+game.print_instructions(code.long_colors)
+game.loop_guesses(code.short_colors)
