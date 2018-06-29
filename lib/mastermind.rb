@@ -26,6 +26,7 @@ class Mastermind
   end
 
   def loop_guesses(short_colors)
+    feedback = ""
     while @remaining_guesses > 0
       puts "You have #{@remaining_guesses} guesses remaining."
       guess = @game_input.guess(short_colors)
@@ -43,7 +44,7 @@ class Mastermind
       log_guess(guess)
       @remaining_guesses -= 1
     end
-    loss(guess)
+    loss if feedback[:red] != 4 && @remaining_guesses == 0
   end
 
   def log_guess(guess)
@@ -94,17 +95,15 @@ class Mastermind
     white_count = white(@game_code, guess)
     red_and_white(white_count, @game_code, guess)
   end
-  
+
   def win
     puts "You win! The code was #{@game_code}. Would you like to play again? (y/n) "
     replay
   end
 
-  def loss(guess)
-    if compare(guess)[:red] != 4 && @remaining_guesses == 0
-      puts "Sorry, the code was #{@game_code}. Would you like to play again? (y/n) "
-      replay
-    end
+  def loss
+    puts "Sorry, the code was #{@game_code}. Would you like to play again? (y/n) "
+    replay
   end
 
   def replay
