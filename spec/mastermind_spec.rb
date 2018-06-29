@@ -1,11 +1,11 @@
 require_relative '../lib/mastermind'
 require_relative '../lib/code'
-require_relative '../lib/inputguess.rb'
+require_relative '../lib/inputguess'
 
 RSpec.describe Mastermind do
   let(:code) { CodeGenerator.new }
   let(:input) { InputGuess.new }
-  let(:game) { Mastermind.new(code, input) }
+  let(:game) { Mastermind.new(code.secret_code, input) }
   let(:long_colors) { ["red", "orange", "yellow", "green", "blue", "purple"] }
   let(:short_colors) { ["R", "O", "Y", "G", "B", "P"] }
 
@@ -29,16 +29,16 @@ RSpec.describe Mastermind do
   describe "#white_pins" do
     context "when guess matches some colors in code"
       it "returns count of matched colors" do
-        expect(game.white_pins("ROYG", "RROO")).to eq (2)
+        expect(game.white("ROYG", "RROO")).to eq (2)
 
-        expect(game.white_pins("ROOO", "RROO")).to eq (3)
+        expect(game.white("ROOO", "RROO")).to eq (3)
 
-        expect(game.white_pins("BYYG", "BBYG")).to eq (3)
+        expect(game.white("BYYG", "BBYG")).to eq (3)
       end
 
     context "when guess matches no colors in code"
       it "returns zero" do
-        expect(game.white_pins("ROYG", "BPBP")).to eq (0)
+        expect(game.white("ROYG", "BPBP")).to eq (0)
       end
   end
 
@@ -58,9 +58,23 @@ RSpec.describe Mastermind do
       end
   end
 
-  describe "#feedback" do
-    xit "gives count of red and white pins" do
-      expect (game.feedback("RORO")).to include(:red, :white)
+  describe "#loop_guesses" do
+    xit "gets and checks user guesses until no guesses remain" do
+      game.remaining_guesses = 2
+    end
+  end
+
+  describe "#restart_game" do
+    it "starts false, ends true" do
+      expect(game.restart).to eq (false)
+      game.restart_game
+      expect(game.restart).to eq (true)
+    end
+  end
+
+  describe "#compare" do
+    it "gets red and white pins for guess" do
+      expect(game.compare("RORO")).to include(:red, :white)
     end
   end
 

@@ -1,9 +1,12 @@
 class Mastermind
+  attr_reader :restart
+
   def initialize(code, input)
     @game_code = code
     @game_input = input
     @remaining_guesses = 10
     @past_guesses = []
+    @restart = false
   end
 
   def print_instructions(long_colors)
@@ -27,9 +30,12 @@ class Mastermind
       puts "You have #{@remaining_guesses} guesses remaining."
       guess = @game_input.guess(short_colors)
       quit if guess == "QUIT"
-      restart if guess == "RESTART"
+      if guess == "RESTART"
+        restart_game
+        break
+      end
 
-      feedback = feedback(guess)
+      feedback = compare(guess)
       if feedback[:red] == 4
         win
         break
@@ -37,7 +43,7 @@ class Mastermind
       log_guess(guess)
       @remaining_guesses -= 1
     end
-    loss(feedback)
+    loss(guess)
   end
 
   def log_guess(guess)
@@ -54,7 +60,7 @@ class Mastermind
     color_count
   end
 
-  def white_pins(code, guess)
+  def white(code, guess)
     code_color_count = color_count(code)
     guess_color_count = color_count(guess)
 
@@ -84,19 +90,25 @@ class Mastermind
     {:red => red_count, :white => white_count}
   end
 
+  def compare(guess)
+    white_count = white(@game_code, guess)
+    red_and_white(white_count, @game_code, guess)
+  end
+  
   def win
-    puts "You win! The code was #{@game_code}. Would you like to play again? "
+    puts "You win! The code was #{@game_code}. Would you like to play again? (y/n) "
+    replay
   end
 
-  def loss(feedback)
-    if feedback[:red] != 4
-      puts "Sorry, the code was #{@game_code}. Would you like to play again? "
+  def loss(guess)
+    if compare(guess)[:red] != 4 && @remaining_guesses == 0
+      puts "Sorry, the code was #{@game_code}. Would you like to play again? (y/n) "
+      replay
     end
   end
 
-  def feedback(guess)
-    white_count = white_pins(@game_code, guess)
-    red_and_white(white_count, @game_code, guess)
+  def replay
+    restart_game if gets.chomp.match(/[yY]/)
   end
 
   def quit
@@ -104,8 +116,8 @@ class Mastermind
     exit
   end
 
-  def restart
-    puts "New game coming right up!"
-    exit
+  def restart_game
+    puts "New game coming right up."
+    @restart = true
   end
 end
