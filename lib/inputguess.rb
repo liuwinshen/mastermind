@@ -4,7 +4,11 @@ class InputGuess
     until valid_guess
       print "Make a guess using available colors #{colors}: "
       user_input = clean_guess(gets.chomp)
-      return user_input if user_input == "QUIT" || user_input == "RESTART"
+      quit if user_input == "QUIT"
+      if user_input == "RESTART"
+        restart_game
+        break
+      end
       if validate_length(user_input) && validate_colors(user_input, colors)
         valid_guess = true
       else
@@ -24,5 +28,15 @@ class InputGuess
 
   def validate_colors(guess, colors)
     guess.chars.all? { |c| colors.include?(c) }
+  end
+
+  def quit
+    puts "So long for now!"
+    exit
+  end
+
+  def restart_game
+    puts "New game coming right up."
+    # @restart = true
   end
 end

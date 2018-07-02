@@ -30,13 +30,9 @@ class Mastermind
     while @remaining_guesses > 0
       puts "You have #{@remaining_guesses} guesses remaining."
       guess = @game_input.guess(short_colors)
-      quit if guess == "QUIT"
-      if guess == "RESTART"
-        restart_game
-        break
-      end
 
-      feedback = compare(guess)
+      feedback = check_guess(guess)
+      print_feedback(feedback)
       if feedback[:red] == 4
         win
         break
@@ -52,50 +48,6 @@ class Mastermind
     puts "Your previous guesses were #{@past_guesses}."
   end
 
-  def color_count(code)
-    color_count = Hash.new(0)
-    code.each_char do |c|
-      color_key = c.to_sym
-      color_count[color_key] += 1
-      end
-    color_count
-  end
-
-  def white(code, guess)
-    code_color_count = color_count(code)
-    guess_color_count = color_count(guess)
-
-    white_count = 0
-    guess_color_count.each do |k, v|
-      if v <= code_color_count[k]
-        white_count += v
-      elsif v > code_color_count[k]
-        white_count += code_color_count[k]
-      end
-    end
-    white_count
-  end
-
-  def red_and_white(white_count, code, guess)
-    red_count = 0
-
-    guess.length.times do |i|
-      if guess[i] == code[i]
-        red_count += 1
-        if white_count > 0
-          white_count -= 1
-        end
-      end
-    end
-    puts "Red pins: #{red_count} \nWhite pins: #{white_count}"
-    {:red => red_count, :white => white_count}
-  end
-
-  def compare(guess)
-    white_count = white(@game_code, guess)
-    red_and_white(white_count, @game_code, guess)
-  end
-
   def win
     puts "You win! The code was #{@game_code}. Would you like to play again? (y/n) "
     replay
@@ -108,15 +60,5 @@ class Mastermind
 
   def replay
     restart_game if gets.chomp.match(/[yY]/)
-  end
-
-  def quit
-    puts "So long for now!"
-    exit
-  end
-
-  def restart_game
-    puts "New game coming right up."
-    @restart = true
   end
 end
