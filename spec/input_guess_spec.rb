@@ -1,4 +1,4 @@
-require_relative '../lib/inputguess'
+require_relative '../lib/input_guess'
 
 RSpec.describe InputGuess do
   let(:input) { InputGuess.new }
@@ -43,6 +43,20 @@ RSpec.describe InputGuess do
     it "rejects non-available colors" do
       expect(input.validate_colors("ROBC", colors)).to eq(false)
       expect(input.validate_colors("ABCD", colors)).to eq(false)
+    end
+  end
+
+  describe "#quit" do
+    it "ends game" do
+      expect {input.quit}.to output(/So long for now!/).to_stdout
+    end
+  end
+
+  describe "#restart_game" do
+    it "starts false, ends true" do
+      expect(input.taking_guesses).to eq (true)
+      input.restart_game
+      expect(input.taking_guesses).to eq (false)
     end
   end
 end

@@ -1,18 +1,25 @@
 class InputGuess
+  attr_reader :taking_guesses
+
+  def initialize
+    @taking_guesses = true
+  end
+
   def guess(colors)
     valid_guess = false
     until valid_guess
       print "Make a guess using available colors #{colors}: "
       user_input = clean_guess(gets.chomp)
-      quit if user_input == "QUIT"
-      if user_input == "RESTART"
-        restart_game
-        break
-      end
-      if validate_length(user_input) && validate_colors(user_input, colors)
+      game_command?(user_input)
+
+      if @taking_guesses
+        if validate_length(user_input) && validate_colors(user_input, colors)
         valid_guess = true
+        else
+          puts "Please enter four colors using only their first letters."
+        end
       else
-        puts "Please enter four colors using only their first letters."
+        return
       end
     end
     user_input
@@ -30,6 +37,11 @@ class InputGuess
     guess.chars.all? { |c| colors.include?(c) }
   end
 
+  def game_command?(user_input)
+    quit if user_input == "QUIT"
+    restart_game if user_input == "RESTART"
+  end
+
   def quit
     puts "So long for now!"
     exit
@@ -37,6 +49,6 @@ class InputGuess
 
   def restart_game
     puts "New game coming right up."
-    # @restart = true
+    @taking_guesses = false
   end
 end

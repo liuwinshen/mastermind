@@ -1,12 +1,12 @@
 class Mastermind
   attr_reader :restart
 
-  def initialize(code, input)
+  def initialize(code, input, guess_checker)
     @game_code = code
-    @game_input = input
+    @input_stream = input
+    @guess_checker = guess_checker
     @remaining_guesses = 10
     @past_guesses = []
-    @restart = false
   end
 
   def print_instructions(long_colors)
@@ -29,18 +29,29 @@ class Mastermind
     feedback = ""
     while @remaining_guesses > 0
       puts "You have #{@remaining_guesses} guesses remaining."
-      guess = @game_input.guess(short_colors)
+      guess = @input_stream.guess(short_colors)
 
-      feedback = check_guess(guess)
-      print_feedback(feedback)
-      if feedback[:red] == 4
-        win
-        break
+      if @input_stream.taking_guesses
+        feedback = @guess_checker.get_feedback(guess)
+        @guess_checker.print_feedback
+        if feedback[:red] == 4
+          puts "You win! The code was #{@game_code}."
+          break
+        end
+        log_guess(guess)
+        @remaining_guesses -= 1
+      else
+        return
       end
-      log_guess(guess)
-      @remaining_guesses -= 1
     end
-    loss if feedback[:red] != 4 && @remaining_guesses == 0
+
+    if @input_stream.taking_guesses == false
+      return
+    elsif feedback[:red] != 4 && @remaining_guesses == 0
+      puts "Sorry, the code was #{@game_code}."
+    end
+
+    replay
   end
 
   def log_guess(guess)
@@ -48,17 +59,8 @@ class Mastermind
     puts "Your previous guesses were #{@past_guesses}."
   end
 
-  def win
-    puts "You win! The code was #{@game_code}. Would you like to play again? (y/n) "
-    replay
-  end
-
-  def loss
-    puts "Sorry, the code was #{@game_code}. Would you like to play again? (y/n) "
-    replay
-  end
-
   def replay
-    restart_game if gets.chomp.match(/[yY]/)
+    puts "Would you like to play again? (y/n) "
+    @input_stream.restart_game if gets.chomp.match(/[yY]/)
   end
 end

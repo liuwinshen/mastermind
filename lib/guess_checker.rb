@@ -1,13 +1,14 @@
 class GuessChecker
-  attr_reader :pins
-  
-  def initialize(guess, code)
-    @current_guess = guess
-    @check_code = code.clone
+  attr_reader :current_guess, :original_code, :check_code, :pins
+
+  def initialize(original_code)
+    @current_guess = ""
+    @original_code = original_code
+    @check_code = ""
     @pins = {}
   end
 
-  def check_red(guess = @current_guess, code = @check_code)
+  def check_red(guess, code)
     red_count = 0
     guess.length.times do |i|
       if guess[i] == code[i]
@@ -15,12 +16,10 @@ class GuessChecker
         guess[i], code[i] = "-", "-"
       end
     end
-    @current_guess = guess
-    @check_code = code
     red_count
   end
 
-  def check_white(guess = @current_guess, code = @check_code)
+  def check_white(guess, code)
     white_count = 0
     guess.length.times do |i|
       if guess[i].match(/[A-Z]/)
@@ -31,16 +30,19 @@ class GuessChecker
         end
       end
     end
+    @check_code = @original_code
     white_count
   end
 
-  def get_feedback(guess = @current_guess, code = @check_code)
-    red_count = check_red(guess, code)
-    white_count = check_white(guess, code)
+  def get_feedback(guess)
+    @current_guess = guess.clone
+    @check_code = original_code.clone
+    red_count = check_red(@current_guess, @check_code)
+    white_count = check_white(@current_guess, @check_code)
     @pins = {:red => red_count, :white => white_count}
   end
 
-  def print_feedback(pins = @pins)
-    puts "Red pins: #{pins[:red]} \nWhite pins: #{pins[:white]}"
+  def print_feedback
+    puts "Red pins: #{@pins[:red]} \nWhite pins: #{@pins[:white]}"
   end
 end

@@ -1,7 +1,7 @@
 require_relative '../lib/guess_checker'
 
 RSpec.describe GuessChecker do
-  let(:checker) { GuessChecker.new("RRRR", "ROYG") }
+  let(:checker) { GuessChecker.new("RGYO") }
 
   describe "#check_red" do
     context "when guess matches some colors in code" do
@@ -9,12 +9,22 @@ RSpec.describe GuessChecker do
         expect(checker.check_red("RRRR", "RROO")).to eq(2)
       end
 
+      xit "replaces matched colors with dashes in check code" do
+        checker.check_red("ROYG", "RGYO")
+        expect(checker.check_code).to eq("-G-O")
+      end
+
+      it "leaves original code unchanged" do
+        checker.check_red("ROYG", "RGYO")
+        expect(checker.original_code).to eq("RGYO")
+      end
+
       it "returns 3 red pins for different colors" do
         expect(checker.check_red("ROYG", "ROYB")).to eq(3)
       end
     end
 
-    context "when guess does not match any colors in code" do
+    context "when guess matches no colors in code" do
       it "returns zero" do
         expect(checker.check_red("ROYG", "BPBP")).to eq (0)
       end
@@ -38,6 +48,16 @@ RSpec.describe GuessChecker do
       it "ignores dashes and returns 1" do
         expect(checker.check_white("--RP", "--PO")).to eq(1)
       end
+
+      it "updates check code to original code" do
+        checker.check_white("-O-G", "-G-O")
+        expect(checker.check_code).to eq("RGYO")
+      end
+
+      it "leaves original code unchanged" do
+        checker.check_white("-O-G", "-G-O")
+        expect(checker.original_code).to eq("RGYO")
+      end
     end
 
     context "when guess matches no colors in code" do
@@ -50,24 +70,39 @@ RSpec.describe GuessChecker do
   describe "#get_feedback" do
     context "when guess matches colors in code" do
       it "returns 2 red pins" do
-        checker.get_feedback("ROYG", "RGYO")
-        expect(checker.pins[:red]).to eq (2)
+        checker.get_feedback("ROYG")
+        expect(checker.pins[:red]).to eq(2)
+      end
+
+      it "updates check code to original code" do
+        checker.get_feedback("ROYG")
+        expect(checker.check_code).to eq("RGYO")
+      end
+
+      it "leaves original code unchanged" do
+        checker.get_feedback("ROYG")
+        expect(checker.original_code).to eq("RGYO")
       end
 
       it "returns 2 white pins" do
-        checker.get_feedback("ROYG", "RGYO")
+        checker.get_feedback("ROYG")
         expect(checker.pins[:white]).to eq (2)
+      end
+
+      it "replaces matched colors with dashes" do
+        checker.get_feedback("ROYG")
+        expect(checker.current_guess).to eq("----")
       end
     end
 
-    context "all white pins are in the right position" do
-      it "returns no white pins" do
-        checker.get_feedback("BYYG", "BBYG")
+    context "all matched colors are in the right position" do
+      it "returns 3 red pins" do
+        checker.get_feedback("RGYB")
         expect(checker.pins[:red]).to eq (3)
       end
 
       it "returns no white pins" do
-        checker.get_feedback("BYYG", "BBYG")
+        checker.get_feedback("---B")
         expect(checker.pins[:white]).to eq (0)
       end
     end
