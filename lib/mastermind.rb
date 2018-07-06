@@ -29,7 +29,7 @@ class Mastermind
     feedback = ""
     while @remaining_guesses > 0
       puts "You have #{@remaining_guesses} guesses remaining."
-      guess = @input_stream.guess(short_colors)
+      guess = @input_stream.get_input(short_colors)
 
       if @input_stream.taking_guesses
         feedback = @guess_checker.get_feedback(guess)
@@ -62,5 +62,15 @@ class Mastermind
   def replay
     puts "Would you like to play again? (y/n) "
     @input_stream.restart_game if gets.chomp.match(/[yY]/)
+  end
+
+  def quit
+    puts "So long for now!"
+    exit
+  end
+
+  def restart_game
+    puts "New game coming right up."
+    @taking_guesses = false
   end
 end

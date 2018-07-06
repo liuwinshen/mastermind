@@ -1,7 +1,7 @@
 require_relative '../lib/input_guess'
 
-RSpec.describe InputGuess do
-  let(:input) { InputGuess.new }
+RSpec.describe InputReceiver do
+  let(:input) { InputReceiver.new }
   let(:colors) { ["R", "O", "Y", "G", "B", "P"] }
 
   describe "#clean_guess" do

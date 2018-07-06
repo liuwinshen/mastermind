@@ -1,6 +1,6 @@
 require_relative '../lib/mastermind'
 require_relative '../lib/code'
-require_relative '../lib/input_guess'
+require_relative '../lib/input_receiver'
 require_relative '../lib/guess_checker'
 
 RSpec.describe Mastermind do
@@ -17,9 +17,4 @@ RSpec.describe Mastermind do
     end
   end
 
-  describe "#loop_guesses" do
-    xit "gets and checks user guesses until no guesses remain" do
-      game.remaining_guesses = 2
-    end
-  end
 end
