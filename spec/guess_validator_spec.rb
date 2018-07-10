@@ -3,16 +3,14 @@ require_relative '../lib/guess_validator'
 
 RSpec.describe GuessValidator do
   let(:guess) { Guess.new(text) }
-  let(:validator) { GuessValidator.new(guess) }
+  let(:validator) { GuessValidator.new }
 
   describe '#validate' do
-    before(:each) { validator.validate! }
-
     context 'when input contains numbers' do
       let(:text) { "ROY1" }
 
       it 'populates errors with new error' do
-        expect(validator.errors).to eq(["Numbers are not allowed."])
+        expect(validator.validate(guess)).to eq(["Numbers are not allowed."])
       end
     end
 
@@ -20,7 +18,7 @@ RSpec.describe GuessValidator do
       let(:text) { "Y!@R" }
 
       it 'populates errors with punctuation error' do
-        expect(validator.errors).to eq(["Punctuation is not allowed."])
+        expect(validator.validate(guess)).to eq(["Punctuation is not allowed."])
       end
     end
 
@@ -28,7 +26,7 @@ RSpec.describe GuessValidator do
       let(:text) { 'r' }
 
       it 'appends an error message to error' do
-        expect(validator.errors).to eq(["Your guess is too short. Please enter 4 letters."])
+        expect(validator.validate(guess)).to eq(["Your guess is too short. Please enter 4 letters."])
       end
     end
 
@@ -36,7 +34,7 @@ RSpec.describe GuessValidator do
       let(:text) { 'roygbp' }
 
       it 'appends an error message to error' do
-        expect(validator.errors).to eq(["Your guess is too long. Only 4 letters are allowed."])
+        expect(validator.validate(guess)).to eq(["Your guess is too long. Only 4 letters are allowed."])
       end
     end
 
@@ -44,7 +42,7 @@ RSpec.describe GuessValidator do
       let(:text) { 'awfs' }
 
       it 'appends an error message to error' do
-        expect(validator.errors).to eq(["Your guess has invalid colors. Please use only available colors."])
+        expect(validator.validate(guess)).to eq(["Your guess has invalid colors. Please use only available colors."])
       end
     end
 
@@ -52,7 +50,7 @@ RSpec.describe GuessValidator do
       let(:text) { "R!2" }
 
       it 'appends several error messages to errors' do
-        expect(validator.errors).to eq([
+        expect(validator.validate(guess)).to eq([
           "Numbers are not allowed.",
           "Punctuation is not allowed.",
           "Your guess is too short. Please enter 4 letters."
@@ -64,7 +62,7 @@ RSpec.describe GuessValidator do
       let(:text) { "QZ2A" }
 
       it 'does not append invalid color messge to errors' do
-        expect(validator.errors).to_not include("Your guess has invalid colors. Please use only available colors.")
+        expect(validator.validate(guess)).to_not include("Your guess has invalid colors. Please use only available colors.")
       end
     end
 
@@ -72,7 +70,7 @@ RSpec.describe GuessValidator do
       let(:text) { "AO,Y" }
 
       it 'does not append invalid color message to errors' do
-        expect(validator.errors).to_not include("Your guess has invalid colors. Please use only available colors.")
+        expect(validator.validate(guess)).to_not include("Your guess has invalid colors. Please use only available colors.")
       end
     end
 
@@ -80,7 +78,7 @@ RSpec.describe GuessValidator do
       let(:text) { "ROYG" }
 
       it 'does not append any messages to errors' do
-        expect(validator.errors).to eq([])
+        expect(validator.validate(guess)).to eq([])
       end
     end
   end

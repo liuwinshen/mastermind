@@ -1,67 +1,62 @@
 class GuessValidator
-  attr_reader :errors
-
-  def initialize(guess)
-    @guess = guess.to_s
-    @errors = []
+  def initialize
     @colors = ["R", "O", "Y", "G", "B", "P"]
     @validated = false
   end
 
-  def validate!
+  def validate(guess)
     @validated = true
-    numbers! if numbers?
-    punctuation! if punctuation?
-    too_short! if too_short?
-    too_long! if too_long?
+    guess = guess.to_s
+    errors = []
 
-    unless (numbers? || punctuation?)
-      invalid_colors! if invalid_colors?
+    if numbers?(guess)
+      errors << "Numbers are not allowed."
     end
+
+    if punctuation?(guess)
+      errors << "Punctuation is not allowed."
+    end
+
+    if too_short?(guess)
+      errors << "Your guess is too short. Please enter 4 letters."
+    end
+
+    if too_long?(guess)
+      errors << "Your guess is too long. Only 4 letters are allowed."
+    end
+
+    unless (numbers?(guess) || punctuation?(guess))
+      if invalid_colors?(guess)
+        errors << "Your guess has invalid colors. Please use only available colors."
+      end
+    end
+
+    errors
   end
 
-  def valid?
+  def valid?(errors)
     raise Exception.new('Must run #validate! before calling #valid?') unless @validated
-    @errors.empty?
+    errors.empty?
+    @validated = false
   end
 
-  def numbers?
-    @guess.match(/[\d]/)
+  def numbers?(guess)
+    guess.match(/[\d]/)
   end
 
-  def numbers!
-    @errors << "Numbers are not allowed."
+  def punctuation?(guess)
+    guess.match(/[^\w]/)
   end
 
-  def punctuation?
-    @guess.match(/[^\w]/)
+  def too_short?(guess)
+    guess.length < 4
   end
 
-  def punctuation!
-    @errors << "Punctuation is not allowed."
+  def too_long?(guess)
+    guess.length > 4
   end
 
-  def too_short?
-    @guess.length < 4
-  end
-
-  def too_short!
-    @errors << "Your guess is too short. Please enter 4 letters."
-  end
-
-  def too_long?
-    @guess.length > 4
-  end
-
-  def too_long!
-    @errors << "Your guess is too long. Only 4 letters are allowed."
-  end
-
-  def invalid_colors!
-    @errors << "Your guess has invalid colors. Please use only available colors."
-  end
-
-  def invalid_colors?
-    (@guess.chars - @colors).any?
+  def invalid_colors?(guess)
+    (guess.chars - @colors).any?
   end
 end

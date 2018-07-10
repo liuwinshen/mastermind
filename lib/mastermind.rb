@@ -1,15 +1,21 @@
+require_relative './input_receiver'
+require_relative './guess'
+require_relative './guess_validator'
+require_relative './guess_checker'
+
 class Mastermind
   attr_reader :restart
 
-  def initialize(code, input, guess_checker)
-    @game_code = code
-    @input_stream = input
-    @guess_checker = guess_checker
+  def initialize(code)
+    @code = code
+    @input = InputReceiver.get_input
+    @validator = GuessValidator.new
+    @guess_checker = GuessChecker.new
     @remaining_guesses = 10
     @past_guesses = []
   end
 
-  def print_instructions(long_colors)
+  def print_instructions(long_colors = @code.long_colors)
     puts "\tWelcome to Mastermind! The object of the game is to guess a 4-color code
         (order matters) within 10 guesses. The available colors are #{long_colors}.
         Colors may be used in the code more than once or not at all.
@@ -25,17 +31,19 @@ class Mastermind
         To quit the game, type 'quit'. To start a new game, type 'restart'."
   end
 
-  def loop_guesses(short_colors)
+  def loop_guesses(short_colors = @code.short_colors)
+    guess = Guess.new
     feedback = ""
     while @remaining_guesses > 0
-      puts "You have #{@remaining_guesses} guesses remaining."
-      guess = @input_stream.get_input(short_colors)
+      get_guess
+      # @validator.validate
+      @validator.new(guess)
 
-      if @input_stream.taking_guesses
+      if @input.validate!
         feedback = @guess_checker.get_feedback(guess)
         @guess_checker.print_feedback
         if feedback[:red] == 4
-          puts "You win! The code was #{@game_code}."
+          puts "You win! The code was #{@code}."
           break
         end
         log_guess(guess)
@@ -45,13 +53,19 @@ class Mastermind
       end
     end
 
-    if @input_stream.taking_guesses == false
+    if @input.taking_guesses == false
       return
     elsif feedback[:red] != 4 && @remaining_guesses == 0
-      puts "Sorry, the code was #{@game_code}."
+      puts "Sorry, the code was #{@code}."
     end
 
     replay
+  end
+
+  def get_guess
+    puts "You have #{@remaining_guesses} guesses remaining."
+    puts "Make a guess using available colors #{@code.short_colors}: "
+    guess = Guess.new(gets.chomp)
   end
 
   def log_guess(guess)
@@ -61,7 +75,7 @@ class Mastermind
 
   def replay
     puts "Would you like to play again? (y/n) "
-    @input_stream.restart_game if gets.chomp.match(/[yY]/)
+    @input.restart_game if gets.chomp.match(/[yY]/)
   end
 
   def quit
