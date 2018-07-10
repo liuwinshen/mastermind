@@ -1,8 +1,8 @@
-require_relative '../lib/guess'
+require_relative '../lib/user_input'
 require_relative '../lib/guess_validator'
 
 RSpec.describe GuessValidator do
-  let(:guess) { Guess.new(text) }
+  let(:input) { UserInput.new(text).guess }
   let(:validator) { GuessValidator.new }
 
   describe '#validate' do
@@ -10,7 +10,7 @@ RSpec.describe GuessValidator do
       let(:text) { "ROY1" }
 
       it 'populates errors with new error' do
-        expect(validator.validate(guess)).to eq(["Numbers are not allowed."])
+        expect(validator.validate(input)).to eq(["Numbers are not allowed."])
       end
     end
 
@@ -18,7 +18,7 @@ RSpec.describe GuessValidator do
       let(:text) { "Y!@R" }
 
       it 'populates errors with punctuation error' do
-        expect(validator.validate(guess)).to eq(["Punctuation is not allowed."])
+        expect(validator.validate(input)).to eq(["Punctuation is not allowed."])
       end
     end
 
@@ -26,7 +26,7 @@ RSpec.describe GuessValidator do
       let(:text) { 'r' }
 
       it 'appends an error message to error' do
-        expect(validator.validate(guess)).to eq(["Your guess is too short. Please enter 4 letters."])
+        expect(validator.validate(input)).to eq(["Your guess is too short. Please enter 4 letters."])
       end
     end
 
@@ -34,7 +34,7 @@ RSpec.describe GuessValidator do
       let(:text) { 'roygbp' }
 
       it 'appends an error message to error' do
-        expect(validator.validate(guess)).to eq(["Your guess is too long. Only 4 letters are allowed."])
+        expect(validator.validate(input)).to eq(["Your guess is too long. Only 4 letters are allowed."])
       end
     end
 
@@ -42,7 +42,7 @@ RSpec.describe GuessValidator do
       let(:text) { 'awfs' }
 
       it 'appends an error message to error' do
-        expect(validator.validate(guess)).to eq(["Your guess has invalid colors. Please use only available colors."])
+        expect(validator.validate(input)).to eq(["Your guess has invalid colors. Please use only available colors."])
       end
     end
 
@@ -50,7 +50,7 @@ RSpec.describe GuessValidator do
       let(:text) { "R!2" }
 
       it 'appends several error messages to errors' do
-        expect(validator.validate(guess)).to eq([
+        expect(validator.validate(input)).to eq([
           "Numbers are not allowed.",
           "Punctuation is not allowed.",
           "Your guess is too short. Please enter 4 letters."
@@ -62,7 +62,7 @@ RSpec.describe GuessValidator do
       let(:text) { "QZ2A" }
 
       it 'does not append invalid color messge to errors' do
-        expect(validator.validate(guess)).to_not include("Your guess has invalid colors. Please use only available colors.")
+        expect(validator.validate(input)).to_not include("Your guess has invalid colors. Please use only available colors.")
       end
     end
 
@@ -70,7 +70,7 @@ RSpec.describe GuessValidator do
       let(:text) { "AO,Y" }
 
       it 'does not append invalid color message to errors' do
-        expect(validator.validate(guess)).to_not include("Your guess has invalid colors. Please use only available colors.")
+        expect(validator.validate(input)).to_not include("Your guess has invalid colors. Please use only available colors.")
       end
     end
 
@@ -78,27 +78,17 @@ RSpec.describe GuessValidator do
       let(:text) { "ROYG" }
 
       it 'does not append any messages to errors' do
-        expect(validator.validate(guess)).to eq([])
+        expect(validator.validate(input)).to eq([])
       end
     end
   end
 
   describe '#valid?' do
-    context 'when not validated' do
-      let(:text) { "abc12" }
-
-      it 'raises error' do
-        expect{validator.valid?}.to raise_exception(Exception, 'Must run #validate! before calling #valid?')
-      end
-    end
-
     context 'when validated and input is valid' do
       let(:text) { "RORO" }
 
       it 'returns true' do
-        validator.validate!
-
-        expect(validator.valid?).to eq(true)
+        expect(validator.valid?(input)).to eq(true)
       end
     end
 
@@ -106,9 +96,7 @@ RSpec.describe GuessValidator do
       let(:text) { "abc12" }
 
       it 'returns false' do
-        validator.validate!
-
-        expect(validator.valid?).to eq(false)
+        expect(validator.valid?(input)).to eq(false)
       end
     end
   end

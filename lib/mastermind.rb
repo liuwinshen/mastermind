@@ -1,4 +1,3 @@
-require_relative './input_receiver'
 require_relative './guess'
 require_relative './guess_validator'
 require_relative './guess_checker'
@@ -8,14 +7,13 @@ class Mastermind
 
   def initialize(code)
     @code = code
-    @input = InputReceiver.get_input
     @validator = GuessValidator.new
-    @guess_checker = GuessChecker.new
+    @guess_checker = GuessChecker.new(code)
     @remaining_guesses = 10
     @past_guesses = []
   end
 
-  def print_instructions(long_colors = @code.long_colors)
+  def print_instructions(long_colors)
     puts "\tWelcome to Mastermind! The object of the game is to guess a 4-color code
         (order matters) within 10 guesses. The available colors are #{long_colors}.
         Colors may be used in the code more than once or not at all.
@@ -31,15 +29,11 @@ class Mastermind
         To quit the game, type 'quit'. To start a new game, type 'restart'."
   end
 
-  def loop_guesses(short_colors = @code.short_colors)
-    guess = Guess.new
+  def loop_guesses(short_colors)
     feedback = ""
     while @remaining_guesses > 0
-      get_guess
-      # @validator.validate
-      @validator.new(guess)
-
-      if @input.validate!
+      guess = get_guess
+      if @validator.valid?(guess)
         feedback = @guess_checker.get_feedback(guess)
         @guess_checker.print_feedback
         if feedback[:red] == 4
@@ -64,8 +58,13 @@ class Mastermind
 
   def get_guess
     puts "You have #{@remaining_guesses} guesses remaining."
-    puts "Make a guess using available colors #{@code.short_colors}: "
-    guess = Guess.new(gets.chomp)
+    puts "Make a guess using available colors: "
+    user_input = gets.chomp
+    Guess.new(user_input)
+  end
+
+  def get_results(guess)
+    @guess_checker.get_feedback(guess)
   end
 
   def log_guess(guess)
@@ -73,18 +72,18 @@ class Mastermind
     puts "Your previous guesses were #{@past_guesses}."
   end
 
-  def replay
-    puts "Would you like to play again? (y/n) "
-    @input.restart_game if gets.chomp.match(/[yY]/)
-  end
+  # def replay
+  #   puts "Would you like to play again? (y/n) "
+  #   @input.restart_game if gets.chomp.match(/[yY]/)
+  # end
 
   def quit
     puts "So long for now!"
     exit
   end
 
-  def restart_game
-    puts "New game coming right up."
-    @taking_guesses = false
-  end
+  # def restart_game
+  #   puts "New game coming right up."
+  #   @taking_guesses = false
+  # end
 end

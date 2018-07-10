@@ -1,12 +1,8 @@
-class Guess
+class UserInput
   attr_reader :guess
-  
-  def initialize(guess)
-    @guess = guess.upcase
-  end
 
-  def to_s
-    @guess
+  def initialize(input)
+    @guess = input.upcase
   end
 
   def quit?

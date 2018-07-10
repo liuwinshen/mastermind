@@ -1,15 +1,13 @@
 require_relative '../lib/mastermind'
 require_relative '../lib/code'
-require_relative '../lib/input_receiver'
 require_relative '../lib/guess_checker'
 
 RSpec.describe Mastermind do
   let(:code) { CodeGenerator.new }
-  let(:input) { InputGuess.new }
   let(:guess_checker) { GuessChecker.new(code.secret_code) }
-  let(:game) { Mastermind.new(code.secret_code, input, guess_checker) }
-  let(:long_colors) { ["red", "orange", "yellow", "green", "blue", "purple"] }
-  let(:short_colors) { ["R", "O", "Y", "G", "B", "P"] }
+  let(:game) { Mastermind.new(code.secret_code) }
+  let(:long_colors) { code.long_colors }
+  let(:short_colors) { code.short_colors }
 
   describe "#print_instructions" do
     it "prints how to play" do
@@ -17,4 +15,17 @@ RSpec.describe Mastermind do
     end
   end
 
+  before do
+    $stdin = StringIO.new('RORO')
+  end
+
+  after do
+    $stdin = STDIN
+  end
+
+  describe '#get_guess' do
+    it 'prompts and returns user guess' do
+      expect(game.get_guess).to eq('RORO')
+    end
+  end
 end

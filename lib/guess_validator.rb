@@ -1,14 +1,15 @@
 class GuessValidator
   def initialize
     @colors = ["R", "O", "Y", "G", "B", "P"]
-    @validated = false
+  end
+
+  def valid?(guess)
+    errors = validate(guess)
+    errors.empty?
   end
 
   def validate(guess)
-    @validated = true
-    guess = guess.to_s
     errors = []
-
     if numbers?(guess)
       errors << "Numbers are not allowed."
     end
@@ -30,14 +31,7 @@ class GuessValidator
         errors << "Your guess has invalid colors. Please use only available colors."
       end
     end
-
     errors
-  end
-
-  def valid?(errors)
-    raise Exception.new('Must run #validate! before calling #valid?') unless @validated
-    errors.empty?
-    @validated = false
   end
 
   def numbers?(guess)

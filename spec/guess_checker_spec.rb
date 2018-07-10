@@ -9,11 +9,6 @@ RSpec.describe GuessChecker do
         expect(checker.check_red("RRRR", "RROO")).to eq(2)
       end
 
-      xit "replaces matched colors with dashes in check code" do
-        checker.check_red("ROYG", "RGYO")
-        expect(checker.check_code).to eq("-G-O")
-      end
-
       it "leaves original code unchanged" do
         checker.check_red("ROYG", "RGYO")
         expect(checker.original_code).to eq("RGYO")
