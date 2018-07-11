@@ -7,7 +7,7 @@ RSpec.describe UserInput do
     let (:text) { 'abcd' }
 
     it 'upcases the input' do
-      expect(input.guess).to eq("ABCD")
+      expect(input.content).to eq("ABCD")
     end
   end
 

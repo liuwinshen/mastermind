@@ -10,7 +10,7 @@ def play
 
   game.print_instructions(code.long_colors)
   game.loop_guesses(code.short_colors)
-  play if input.taking_guesses == false
+  play if game.restart_game
 end
 
 play

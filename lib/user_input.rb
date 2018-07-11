@@ -1,15 +1,15 @@
 class UserInput
-  attr_reader :guess
+  attr_reader :content
 
   def initialize(input)
-    @guess = input.upcase
+    @content = input.upcase
   end
 
   def quit?
-    @guess == "QUIT"
+    @content == "QUIT"
   end
 
   def restart?
-    @guess == "RESTART"
+    @content == "RESTART"
   end
 end
