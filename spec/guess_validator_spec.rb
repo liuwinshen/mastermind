@@ -1,8 +1,7 @@
-require_relative '../lib/user_input'
 require_relative '../lib/guess_validator'
 
 RSpec.describe GuessValidator do
-  let(:input) { UserInput.new(text).content }
+  let(:input) { text }
   let(:validator) { GuessValidator.new }
 
   describe '#validate' do
@@ -31,7 +30,7 @@ RSpec.describe GuessValidator do
     end
 
     context 'when input is too short' do
-      let(:text) { 'r' }
+      let(:text) { 'R' }
 
       it 'appends an error message to error' do
         expect(validator.validate(input)).to eq(["Your guess is too short. Please enter 4 letters."])
@@ -39,7 +38,7 @@ RSpec.describe GuessValidator do
     end
 
     context 'when input is too long' do
-      let(:text) { 'roygbp' }
+      let(:text) { 'ROYGBP' }
 
       it 'appends an error message to error' do
         expect(validator.validate(input)).to eq(["Your guess is too long. Only 4 letters are allowed."])
@@ -47,7 +46,7 @@ RSpec.describe GuessValidator do
     end
 
     context 'when input has characters that are invalid colors' do
-      let(:text) { 'awfs' }
+      let(:text) { 'AWFS' }
 
       it 'appends an error message to error' do
         expect(validator.validate(input)).to eq(["Your guess has invalid colors. Please use only available colors."])
@@ -112,7 +111,7 @@ RSpec.describe GuessValidator do
     end
 
     context 'when validated and input is invalid' do
-      let(:text) { "abc12" }
+      let(:text) { "ABC12" }
 
       it 'returns false' do
         expect(validator.valid?(input)).to eq(false)

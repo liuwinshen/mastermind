@@ -1,15 +1,18 @@
-class UserInput
-  attr_reader :content
+require_relative './messages'
 
-  def initialize(input)
-    @content = input.upcase
+module UserInput
+  include Messages
+
+  def get_upcase_input
+    guess_prompt
+    gets.chomp.upcase
   end
 
-  def quit?
-    @content == "QUIT"
+  def quit?(value)
+    value.upcase == "QUIT"
   end
 
-  def restart?
-    @content == "RESTART"
+  def restart?(value)
+    value.upcase == "RESTART"
   end
 end

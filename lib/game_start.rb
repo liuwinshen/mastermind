@@ -8,9 +8,7 @@ def play
   guess_checker = GuessChecker.new(secret_code)
   game = Mastermind.new(secret_code)
 
-  game.print_instructions(code.long_colors)
-  game.loop_guesses(code.short_colors)
-  play if game.restart_game
+  game.play_game(code.long_colors)
 end
 
 play
