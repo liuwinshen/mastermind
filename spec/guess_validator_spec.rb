@@ -100,22 +100,4 @@ RSpec.describe GuessValidator do
       end
     end
   end
-
-  describe '#valid?' do
-    context 'when validated and input is valid' do
-      let(:text) { "RORO" }
-
-      it 'returns true' do
-        expect(validator.valid?(input)).to eq(true)
-      end
-    end
-
-    context 'when validated and input is invalid' do
-      let(:text) { "ABC12" }
-
-      it 'returns false' do
-        expect(validator.valid?(input)).to eq(false)
-      end
-    end
-  end
 end

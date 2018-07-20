@@ -1,22 +1,10 @@
 require_relative './user_input'
 
 class GuessValidator
-  extend UserInput
+  include UserInput
 
   def initialize
     @colors = ["R", "O", "Y", "G", "B", "P"]
-  end
-
-  def loop_til_valid(guess)
-    until valid?(guess)
-      guess = get_upcase_input
-    end
-    guess
-  end
-
-  def valid?(guess)
-    errors = validate(guess)
-    errors.empty?
   end
 
   def validate(guess)

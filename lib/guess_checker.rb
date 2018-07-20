@@ -42,7 +42,4 @@ class GuessChecker
     @pins = {:red => red_count, :white => white_count}
   end
 
-  def print_feedback
-    puts "Red pins: #{@pins[:red]} \nWhite pins: #{@pins[:white]}"
-  end
 end

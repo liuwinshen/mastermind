@@ -17,21 +17,34 @@ class Mastermind
 
   def play_game(long_colors)
     print_instructions(long_colors)
+    feedback = []
+
     while @remaining_guesses > 0
       start_turn_message(@remaining_guesses)
       guess = get_valid_input
 
       feedback = results(guess)
-      @guess_checker.print_feedback(feedback)
+      pins_message(feedback)
+      if win?(feedback)
+        win_message(@code)
+        break
+      end
+      log_guess(guess)
       @remaining_guesses -= 1
     end
+    loss_message(@code) if !win?(feedback)
     replay
   end
 
   def get_valid_input
-    guess = get_upcase_input
-    command?(guess)
-    @validator.loop_til_valid(guess)
+    errors = ['Starting validation']
+    until errors.empty?
+      guess = get_upcase_input
+      command?(guess)
+      errors = @validator.validate(guess)
+      puts errors if !errors.empty?
+    end
+    guess
   end
 
   def results(guess)
@@ -40,11 +53,15 @@ class Mastermind
 
   def log_guess(guess)
     @past_guesses << guess
-    past_guess_message
+    past_guess_message(@past_guesses)
   end
 
   def command?(value)
     quit if quit?(value)
     restart if restart?(value)
+  end
+
+  def win?(feedback)
+    feedback[:red] == 4
   end
 end

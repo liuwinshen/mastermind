@@ -27,6 +27,10 @@ module Messages
     puts errors
   end
 
+  def pins_message(feedback)
+    puts "Red pins: #{feedback[:red]} \nWhite pins: #{feedback[:white]}"
+  end
+
   def past_guess_message(past_guesses)
     puts "Your previous guesses were #{past_guesses}."
   end
@@ -41,5 +45,13 @@ module Messages
 
   def restart_message
     puts "New game coming right up."
+  end
+
+  def win_message(code)
+    puts "You win! The code was #{code}."
+  end
+
+  def loss_message(code)
+    puts "Sorry, you lost. The code was #{code}."
   end
 end
