@@ -44,11 +44,6 @@ RSpec.describe GuessChecker do
         expect(checker.check_white("--RP", "--PO")).to eq(1)
       end
 
-      it "updates check code to original code" do
-        checker.check_white("-O-G", "-G-O")
-        expect(checker.check_code).to eq("RGYO")
-      end
-
       it "leaves original code unchanged" do
         checker.check_white("-O-G", "-G-O")
         expect(checker.original_code).to eq("RGYO")
@@ -69,11 +64,6 @@ RSpec.describe GuessChecker do
         expect(checker.pins[:red]).to eq(2)
       end
 
-      it "updates check code to original code" do
-        checker.get_feedback("ROYG")
-        expect(checker.check_code).to eq("RGYO")
-      end
-
       it "leaves original code unchanged" do
         checker.get_feedback("ROYG")
         expect(checker.original_code).to eq("RGYO")
@@ -82,11 +72,6 @@ RSpec.describe GuessChecker do
       it "returns 2 white pins" do
         checker.get_feedback("ROYG")
         expect(checker.pins[:white]).to eq (2)
-      end
-
-      it "replaces matched colors with dashes" do
-        checker.get_feedback("ROYG")
-        expect(checker.current_guess).to eq("----")
       end
     end
 

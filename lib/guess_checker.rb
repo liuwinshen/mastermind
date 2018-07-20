@@ -1,45 +1,49 @@
 class GuessChecker
-  attr_reader :current_guess, :original_code, :check_code, :pins
+  attr_reader :current_guess, :original_code, :current_code, :pins
 
   def initialize(original_code)
-    @current_guess = ""
     @original_code = original_code
-    @check_code = ""
+    @current_guess = ''
+    @current_code = ''
     @pins = {}
   end
 
   def check_red(guess, code)
+    cloned_guess = guess.clone
+    cloned_code = code.clone
     red_count = 0
-    guess.length.times do |i|
-      if guess[i] == code[i]
+
+    cloned_guess.length.times do |i|
+      if cloned_guess[i] == cloned_code[i]
         red_count += 1
-        guess[i], code[i] = "-", "-"
+        cloned_guess[i], cloned_code[i] = "-", "-"
       end
     end
+    @current_guess = cloned_guess
+    @current_code = cloned_code
     red_count
   end
 
   def check_white(guess, code)
+    cloned_guess = guess.clone
+    cloned_code = code.clone
     white_count = 0
-    guess.length.times do |i|
-      if guess[i].match(/[A-Z]/)
-        if code.include?(guess[i])
+
+    cloned_guess.length.times do |i|
+      if cloned_guess[i].match(/[A-Z]/)
+        if cloned_code.include?(cloned_guess[i])
           white_count += 1
-          index = code.index(guess[i])
-          guess[i], code[index] = "-", "-"
+          index = cloned_code.index(cloned_guess[i])
+          cloned_guess[i], cloned_code[index] = "-", "-"
         end
       end
     end
-    @check_code = @original_code
     white_count
   end
 
   def get_feedback(guess)
-    @current_guess = guess.clone
-    @check_code = original_code.clone
-    red_count = check_red(@current_guess, @check_code)
-    white_count = check_white(@current_guess, @check_code)
+    red_count = check_red(guess, @original_code)
+    white_count = check_white(@current_guess, @current_code)
     @pins = {:red => red_count, :white => white_count}
   end
-
 end
