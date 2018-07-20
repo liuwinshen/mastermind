@@ -15,7 +15,7 @@ module UserInput
     restart if guess == "RESTART"
     errors = validator.validate(guess)
     if errors.empty?
-      return guess
+      guess
     else
       puts errors
       get_valid_input(validator)

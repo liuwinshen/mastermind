@@ -28,10 +28,10 @@ class Mastermind
       log_guess(guess)
       @remaining_guesses -= 1
     end
-    game_outcome(feedback)
+    outcome(feedback)
   end
 
-  def game_outcome(feedback)
+  def outcome(feedback)
     if win?(feedback)
       win_message(@code)
     else
