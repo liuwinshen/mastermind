@@ -2,7 +2,7 @@ require_relative './mastermind'
 require_relative './code'
 require_relative './guess_checker'
 
-def main
+def play_game
   code = CodeGenerator.new
   secret_code = code.secret_code
   guess_checker = GuessChecker.new(secret_code)
@@ -12,5 +12,5 @@ def main
 end
 
 if __FILE__ == $0
-  main
+  play_game
 end

@@ -21,44 +21,32 @@ class Mastermind
 
     while @remaining_guesses > 0
       start_turn_message(@remaining_guesses)
-      guess = get_valid_input
-
-      feedback = results(guess)
+      guess = get_valid_input(@validator)
+      feedback = check(guess)
       pins_message(feedback)
-      if win?(feedback)
-        win_message(@code)
-        break
-      end
+      break if win?(feedback)
       log_guess(guess)
       @remaining_guesses -= 1
     end
-    loss_message(@code) if !win?(feedback)
+    game_outcome(feedback)
+  end
+
+  def game_outcome(feedback)
+    if win?(feedback)
+      win_message(@code)
+    else
+      loss_message(@code)
+    end
     replay
   end
 
-  def get_valid_input
-    errors = ['Starting validation']
-    until errors.empty?
-      guess = get_upcase_input
-      command?(guess)
-      errors = @validator.validate(guess)
-      puts errors if !errors.empty?
-    end
-    guess
-  end
-
-  def results(guess)
+  def check(guess)
     @guess_checker.get_feedback(guess)
   end
 
   def log_guess(guess)
     @past_guesses << guess
     past_guess_message(@past_guesses)
-  end
-
-  def command?(value)
-    quit if quit?(value)
-    restart if restart?(value)
   end
 
   def win?(feedback)

@@ -16,7 +16,7 @@ module Messages
   end
 
   def guess_prompt
-    puts "Make a guess using available colors: "
+    puts "Make a guess: "
   end
 
   def start_turn_message(remaining_guesses)
@@ -44,7 +44,7 @@ module Messages
   end
 
   def restart_message
-    puts "New game coming right up."
+    puts "New game coming right up!"
   end
 
   def win_message(code)

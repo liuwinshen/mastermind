@@ -27,7 +27,7 @@ class GuessValidator
 
     unless (numbers?(guess) || punctuation?(guess))
       if invalid_colors?(guess)
-        errors << "Your guess has invalid colors. Please use only available colors."
+        errors << "Your guess has invalid colors. Please use only #{@colors}."
       end
     end
     errors

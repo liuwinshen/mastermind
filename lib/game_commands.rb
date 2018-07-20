@@ -16,6 +16,6 @@ module GameCommands
   def restart
     restart_message
     system 'clear'
-    load 'game_start.rb'
+    load '/users/win/Documents/GitHub/mastermind/lib/play_game.rb'
   end
 end
