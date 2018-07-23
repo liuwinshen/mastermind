@@ -1,40 +1,55 @@
+require_relative './user_input'
+require_relative './guess_validator'
+require_relative './guess_checker'
+require_relative './messages'
+require_relative './game_commands'
+
 class Mastermind
-  attr_reader :red_count, :white_count
+  include GameCommands, Messages, UserInput
 
-  def print_instructions
-    puts "\tWelcome to Mastermind! The object of the game is to guess a 4-color code
-        within 10 guesses. The available colors are red, orange, yellow, green,
-        blue, and purple. Colors may be used in the code more than once or not at all.
-
-        To make a guess: type the first letter of each color you're guessing in caps.
-        For example, if you want to guess 'red, orange, yellow, red,' type 'ROYR'.
-
-        After each guess, you will receive feedback in the form of colored pins,
-        letting you know:
-          \t- how many colors are correct but in the wrong position (white pins)
-          \t- how many colors are correct and in the right position (red pins)
-
-        To quit the game, type '/q'. To start a new game, type '/r'."
+  def initialize(code)
+    @code = code
+    @validator = GuessValidator.new
+    @guess_checker = GuessChecker.new(code)
+    @remaining_guesses = 10
+    @past_guesses = []
   end
 
-  def color_count(code)
-    color_count = Hash.new(0)
-    code.each do |color|
-      color_key = color.to_sym
-      color_count[color_key] += 1
-      end
-    color_count
+  def play_game(long_colors)
+    print_instructions(long_colors)
+    feedback = []
+
+    while @remaining_guesses > 0
+      start_turn_message(@remaining_guesses)
+      guess = get_valid_input(@validator)
+      feedback = check(guess)
+      pins_message(feedback)
+      break if win?(feedback)
+      log_guess(guess)
+      @remaining_guesses -= 1
+    end
+    outcome(feedback)
   end
 
-  def get_color_counts(code, guess)
-    code_count = color_count(code)
-    guess = guess.chars
-    guess_count = color_count(guess)
+  def outcome(feedback)
+    if win?(feedback)
+      win_message(@code)
+    else
+      loss_message(@code)
+    end
+    replay
   end
 
-  # def compare_red_pins(code_color_count, guess_color_count)
-  #   @red_count = 0
-  #   guess_count.each do |key, value|
-  #   end
-  # end
+  def check(guess)
+    @guess_checker.get_feedback(guess)
+  end
+
+  def log_guess(guess)
+    @past_guesses << guess
+    past_guess_message(@past_guesses)
+  end
+
+  def win?(feedback)
+    feedback[:red] == 4
+  end
 end

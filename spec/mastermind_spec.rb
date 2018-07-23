@@ -1,19 +1,32 @@
 require_relative '../lib/mastermind'
+require_relative '../lib/code'
+require_relative '../lib/guess_checker'
 
 RSpec.describe Mastermind do
-  !let(:game) { Mastermind.new }
+  let(:code) { CodeGenerator.new }
+  let(:guess_checker) { GuessChecker.new(code.secret_code) }
+  let(:long_colors) { code.long_colors }
+  let(:short_colors) { code.short_colors }
+  let(:game) { Mastermind.new(code.secret_code) }
 
-  it "prints game instructions" do
-    expect {game.print_instructions}.to output(/After each guess/).to_stdout
-  end
+  describe '#win?' do
+    let(:game) { Mastermind.new("ROYG") }
+    let(:feedback) { game.check(text) }
 
-  it "counts the number of each color in a given code" do
-    expect(game.color_count(["R", "O", "Y", "G"])).to eq ({:R => 1, :O => 1, :Y => 1, :G => 1})
-    expect(game.color_count(["P", "P", "P", "P"])).to eq ({:P => 4})
-    expect(game.color_count(["R", "O", "B", "R", "B", "B"])).to eq ({:R => 2, :O => 1, :B => 3})
-  end
+    context 'when feedback is a win' do
+      let(:text) { "ROYG" }
 
-  xit "counts how many colors in the guess match the code" do
-    expect(game.compare(["R", "O", "Y", "G"], "RROO")).to eq (2)
+      it 'returns true' do
+        expect(game.win?(feedback)).to eq(true)
+      end
+    end
+
+    context 'when feedback is a not a win' do
+      let(:text) { "BBBB" }
+
+      it 'returns false' do
+        expect(game.win?(feedback)).to eq(false)
+      end
+    end
   end
 end
