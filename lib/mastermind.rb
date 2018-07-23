@@ -2,10 +2,12 @@ require_relative './user_input'
 require_relative './guess_validator'
 require_relative './guess_checker'
 require_relative './messages'
-require_relative './game_commands'
+require_relative './commands'
 
 class Mastermind
-  include GameCommands, Messages, UserInput
+  include Commands, Messages, UserInput
+
+  attr_accessor :restart
 
   def initialize(code)
     @code = code
@@ -13,6 +15,7 @@ class Mastermind
     @guess_checker = GuessChecker.new(code)
     @remaining_guesses = 10
     @past_guesses = []
+    @restart = false
   end
 
   def play_game(long_colors)
@@ -21,14 +24,43 @@ class Mastermind
 
     while @remaining_guesses > 0
       start_turn_message(@remaining_guesses)
-      guess = get_valid_input(@validator)
-      feedback = check(guess)
-      pins_message(feedback)
+      guess = get_upcase_input
+      valid_guess = check_input(guess)
+      break if valid_guess == false
+
+      feedback = score(valid_guess)
+      score_message(feedback)
       break if win?(feedback)
-      log_guess(guess)
+
+      log_guess(valid_guess)
       @remaining_guesses -= 1
     end
-    outcome(feedback)
+    outcome(feedback) unless @restart
+  end
+
+  def check_input(guess)
+    if command?(guess)
+      run_command(guess)
+      return false
+    end
+
+    errors = @validator.validate(guess)
+    if errors.empty?
+      return guess
+    else
+      puts errors
+      guess = get_upcase_input
+      check_input(guess)
+    end
+  end
+
+  def command?(input)
+    ["QUIT", "RESTART"].include?(input)
+  end
+
+  def run_command(input)
+    quit_game if input == "QUIT"
+    restart_game if input == "RESTART"
   end
 
   def outcome(feedback)
@@ -37,10 +69,11 @@ class Mastermind
     else
       loss_message(@code)
     end
-    replay
+    replay_prompt
+    restart_game if gets.chomp.match(/[yY]/)
   end
 
-  def check(guess)
+  def score(guess)
     @guess_checker.get_feedback(guess)
   end
 

@@ -9,6 +9,7 @@ def play_game
   game = Mastermind.new(secret_code)
 
   game.play_game(code.long_colors)
+  play_game if game.restart
 end
 
 if __FILE__ == $0

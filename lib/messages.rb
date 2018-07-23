@@ -27,7 +27,7 @@ module Messages
     puts errors
   end
 
-  def pins_message(feedback)
+  def score_message(feedback)
     puts "Red pins: #{feedback[:red]} \nWhite pins: #{feedback[:white]}"
   end
 
