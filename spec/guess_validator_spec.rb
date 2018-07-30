@@ -49,7 +49,7 @@ RSpec.describe GuessValidator do
       let(:text) { 'AWFS' }
 
       it 'appends an error message to error' do
-        expect(validator.validate(input)).to eq(["Your guess has invalid colors. Please use only available colors."])
+        expect(validator.validate(input)).to eq(["Your guess has invalid colors. Please use only [\"R\", \"O\", \"Y\", \"G\", \"B\", \"P\"]."])
       end
     end
 

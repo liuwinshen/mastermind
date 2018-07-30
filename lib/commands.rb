@@ -1,16 +1,24 @@
 require_relative './messages'
+#require 'json'
 
-module Commands
-  include Messages
-
-  def quit_game
-    quit_message
+class Commands
+  def self.quit
+    Messages.quit_message
     exit
   end
 
-  def restart_game
-    self.restart = true
+  def self.restart(game)
+    game.restart = true
     system 'clear'
-    restart_message
+    Messages.restart_message
   end
+
+  # def save_game
+  #   tempHash = {
+  #       "key_a" => "val_a",
+  #       "key_b" => "val_b"
+  #   }
+  #   File.open("public/temp.json","w") do |f|
+  #     f.write(tempHash.to_json)
+  # end
 end
