@@ -1,8 +1,6 @@
 require_relative './user_input'
 
 class GuessValidator
-  include UserInput
-
   def initialize
     @colors = ["R", "O", "Y", "G", "B", "P"]
   end

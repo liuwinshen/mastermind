@@ -11,7 +11,7 @@ RSpec.describe Mastermind do
 
   describe '#win?' do
     let(:game) { Mastermind.new("ROYG") }
-    let(:feedback) { game.check(text) }
+    let(:feedback) { game.score(text) }
 
     context 'when feedback is a win' do
       let(:text) { "ROYG" }
